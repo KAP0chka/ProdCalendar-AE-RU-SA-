@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unified Holiday Calendar 2026: RU, AE, SA</title>
+    <title>Unified Holiday Calendar 2026: RU, AE, SA, KZ</title>
     <style>
         :root {
             --bg-main: #f8fafc;
@@ -16,6 +16,7 @@
             --color-ru: #0039a6; 
             --color-ae: #ce1126; 
             --color-sa: #006c35; 
+            --color-kz: #00afca; /* Kazakhstan Sky Blue */
             
             /* Vibrant non-working day accent color */
             --color-accent: #FF2F92;
@@ -34,7 +35,7 @@
         }
 
         .container {
-            max-width: 1600px;
+            max-width: 1650px;
             margin: 0 auto;
         }
 
@@ -109,7 +110,7 @@
             border-radius: 6px;
             font-size: 13px;
             color: #334155;
-            max-width: 850px;
+            max-width: 950px;
             line-height: 1.5;
             text-align: left;
         }
@@ -123,15 +124,14 @@
             border-radius: 4px;
             letter-spacing: 0.3px;
             text-align: center;
-            flex: 1; 
-            max-width: 26px;
-            min-width: 18px;
             box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            display: inline-block;
         }
 
         .badge-ru { background-color: var(--color-ru); }
         .badge-ae { background-color: var(--color-ae); }
         .badge-sa { background-color: var(--color-sa); }
+        .badge-kz { background-color: var(--color-kz); }
 
         /* Months Grid */
         .months-grid {
@@ -176,7 +176,7 @@
             padding-bottom: 6px;
         }
 
-        /* Day Container — Flawless, absolute 1:1 square proportions */
+        /* Day Container — Absolute 1:1 square proportions */
         .day-container {
             background-color: var(--bg-main);
             border: 1px solid var(--border);
@@ -218,14 +218,14 @@
 
         /* SMART ADAPTIVE BADGE SIZES */
         
-        /* 1 active country: Large, highly visible layout */
+        /* 1 active country */
         .badges-1 .badge {
             font-size: 11px;
             padding: 2px 6px;
             flex: none;
         }
 
-        /* 2 active countries: Balanced mid-size layout in a single row */
+        /* 2 active countries */
         .badges-2 .badge {
             font-size: 10px;
             padding: 2px 0;
@@ -233,28 +233,38 @@
             min-width: 0;
         }
 
-        /* 3 active countries: Pyramid layout (1 top, 2 bottom) with large font */
+        /* 3 active countries: Pyramid layout (1 top, 2 bottom) */
         .badges-3 .day-badges {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 2px;
             width: 100%;
         }
-
         .badges-3 .badge {
-            font-size: 10px; 
+            font-size: 9.5px; 
             padding: 1.5px 0;
             min-width: 0;
-            max-width: none;
             width: 100%;
         }
-
-        /* RU stretches across the top row */
         .badges-3 .badge:nth-child(1) {
             grid-column: span 2;
         }
 
-        /* Dynamic Day Styles */
+        /* 4 active countries (Maximum alignment, e.g. Saturday): 2x2 Clean Grid */
+        .badges-4 .day-badges {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2px;
+            width: 100%;
+        }
+        .badges-4 .badge {
+            font-size: 9.5px; 
+            padding: 1.5px 0;
+            min-width: 0;
+            width: 100%;
+        }
+
+        /* Dynamic Day Background Styles */
         .day-container.holiday-full {
             background-color: var(--bg-holiday-full);
             border-color: #f4b2cf;
@@ -305,7 +315,7 @@
 <div class="container">
     <header>
         <h1>Unified Holiday Calendar 2026</h1>
-        <p style="color: var(--text-muted); font-size: 1.2rem;">Work Schedule Synchronization: Russia (RU), UAE (AE), Saudi Arabia (SA)</p>
+        <p style="color: var(--text-muted); font-size: 1.2rem;">Work Schedule Synchronization: Russia (RU), UAE (AE), Saudi Arabia (SA), Kazakhstan (KZ)</p>
     </header>
 
     <div class="filter-panel">
@@ -323,12 +333,17 @@
                 <input type="checkbox" class="country-checkbox" data-country="SA" checked>
                 <span style="border-left: 4px solid var(--color-sa); padding-left: 6px;">🇸🇦 Saudi Arabia (SA)</span>
             </label>
+            <label class="checkbox-label">
+                <input type="checkbox" class="country-checkbox" data-country="KZ" checked>
+                <span style="border-left: 4px solid var(--color-kz); padding-left: 6px;">🇰🇿 Kazakhstan (KZ)</span>
+            </label>
         </div>
 
         <div class="disclaimer-box">
             📌 <b>Regional Weekend Characteristics:</b> <br>
-            • <b>Saturday</b> — the only guaranteed <b>common day off</b> for all three countries (RU, AE, SA). <br>
-            • <b>Friday</b> — an official day off <b>only in Saudi Arabia (SA)</b>. In Russia it is a standard working day, and in the UAE (AE) it is a shortened working day (until noon).
+            • <b>Saturday</b> — the only guaranteed <b>common day off</b> for all four countries (RU, AE, SA, KZ). <br>
+            • <b>Friday</b> — an official day off <b>only in Saudi Arabia (SA)</b>. In Russia and Kazakhstan it is a standard working day, and in the UAE (AE) it is a shortened working day (until noon). <br>
+            • <b>Sunday</b> — an official day off in <b>Russia (RU), UAE (AE), and Kazakhstan (KZ)</b>. In Saudi Arabia, it is a standard working day.
         </div>
     </div>
 
@@ -336,39 +351,49 @@
 </div>
 
 <script>
-    // 2026 Official Holiday Registry
+    // 2026 Official Holiday Registry (Including Transfers)
     const holidayData = {
-        "01-01": { RU: "New Year's Day", AE: "New Year's Day" },
-        "01-02": { RU: "New Year Holidays" },
+        "01-01": { RU: "New Year's Day", AE: "New Year's Day", KZ: "New Year's Day" },
+        "01-02": { RU: "New Year Holidays", KZ: "New Year Holiday" },
         "01-03": { RU: "New Year Holidays" },
         "01-04": { RU: "New Year Holidays" },
         "01-05": { RU: "New Year Holidays" },
         "01-06": { RU: "New Year Holidays" },
-        "01-07": { RU: "Orthodox Christmas" },
+        "01-07": { RU: "Orthodox Christmas", KZ: "Orthodox Christmas" },
         "01-08": { RU: "New Year Holidays" },
         "02-22": { SA: "Founding Day" },
         "02-23": { RU: "Defender of the Fatherland Day" },
-        "03-08": { RU: "International Women's Day" },
-        "03-09": { RU: "Day Off Transfer (from Mar 8)" },
+        "03-08": { RU: "International Women's Day", KZ: "International Women's Day" },
+        "03-09": { RU: "Day Off Transfer", KZ: "Day Off Transfer (Women's Day)" },
         "03-19": { AE: "Eid al-Fitr Holiday", SA: "Eid al-Fitr" },
         "03-20": { AE: "Eid al-Fitr Holiday", SA: "Eid al-Fitr" },
-        "03-21": { AE: "Eid al-Fitr", SA: "Eid al-Fitr" },
-        "03-22": { AE: "Eid al-Fitr", SA: "Eid al-Fitr" },
-        "05-01": { RU: "Spring and Labor Day" },
-        "05-09": { RU: "Victory Day" },
-        "05-11": { RU: "Day Off Transfer (from May 9)" },
+        "03-21": { AE: "Eid al-Fitr", SA: "Eid al-Fitr", KZ: "Nauryz Meiramy" },
+        "03-22": { AE: "Eid al-Fitr", SA: "Eid al-Fitr", KZ: "Nauryz Meiramy" },
+        "03-23": { KZ: "Nauryz Meiramy" },
+        "03-24": { KZ: "Day Off Transfer (Nauryz)" },
+        "03-25": { KZ: "Day Off Transfer (Nauryz)" },
+        "05-01": { RU: "Spring and Labor Day", KZ: "People's Unity Day" },
+        "05-07": { KZ: "Defender of the Fatherland Day" },
+        "05-09": { RU: "Victory Day", KZ: "Victory Day" },
+        "05-11": { RU: "Day Off Transfer", KZ: "Day Off Transfer (Victory Day)" },
         "05-26": { AE: "Arafat Day", SA: "Arafat Day" },
-        "05-27": { AE: "Eid al-Adha Holiday", SA: "Eid al-Adha" },
+        "05-27": { AE: "Eid al-Adha Holiday", SA: "Eid al-Adha", KZ: "Kurban Ait" },
         "05-28": { AE: "Eid al-Adha", SA: "Eid al-Adha" },
         "05-29": { AE: "Eid al-Adha", SA: "Eid al-Adha" },
         "06-12": { RU: "Russia Day" },
-        "06-15": { AE: "Islamic New Year" },
-        "08-24": { AE: "Prophet's Birthday" },
+        "06-16": { AE: "Islamic New Year" }, 
+        "07-06": { KZ: "Capital City Day" },
+        "08-25": { AE: "Prophet's Birthday" }, 
+        "08-30": { KZ: "Constitution Day" },
+        "08-31": { KZ: "Day Off Transfer (Constitution Day)" },
         "09-23": { SA: "National Day" },
+        "10-25": { KZ: "Republic Day" },
+        "10-26": { KZ: "Day Off Transfer (Republic Day)" },
         "11-04": { RU: "Unity Day" },
         "12-01": { AE: "Commemoration Day" },
         "12-02": { AE: "UAE National Day" },
-        "12-03": { AE: "UAE National Day" }
+        "12-03": { AE: "UAE National Day" },
+        "12-16": { KZ: "Independence Day" }
     };
 
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -466,6 +491,7 @@
                 if (dayOfWeekIndex === 5) weekendClass = 'we-saturday';  
                 if (dayOfWeekIndex === 6) weekendClass = 'we-sunday';
 
+                // Standard weekend fallbacks for tooltips
                 if (dayOfWeekIndex === 4 && checkedCountries.includes('SA') && (!holidayData[dateKey] || !holidayData[dateKey].SA)) {
                     if (!tooltipParts.some(p => p.startsWith('SA:'))) tooltipParts.push("SA: Calendar Weekend");
                 }
@@ -479,6 +505,9 @@
                     if (checkedCountries.includes('SA') && (!holidayData[dateKey] || !holidayData[dateKey].SA)) {
                         if (!tooltipParts.some(p => p.startsWith('SA:'))) tooltipParts.push("SA: Calendar Weekend");
                     }
+                    if (checkedCountries.includes('KZ') && (!holidayData[dateKey] || !holidayData[dateKey].KZ)) {
+                        if (!tooltipParts.some(p => p.startsWith('KZ:'))) tooltipParts.push("KZ: Calendar Weekend");
+                    }
                 }
                 if (dayOfWeekIndex === 6) {
                     if (checkedCountries.includes('RU') && (!holidayData[dateKey] || !holidayData[dateKey].RU)) {
@@ -486,6 +515,9 @@
                     }
                     if (checkedCountries.includes('AE') && (!holidayData[dateKey] || !holidayData[dateKey].AE)) {
                         if (!tooltipParts.some(p => p.startsWith('AE:'))) tooltipParts.push("AE: Calendar Weekend");
+                    }
+                    if (checkedCountries.includes('KZ') && (!holidayData[dateKey] || !holidayData[dateKey].KZ)) {
+                        if (!tooltipParts.some(p => p.startsWith('KZ:'))) tooltipParts.push("KZ: Calendar Weekend");
                     }
                 }
 
