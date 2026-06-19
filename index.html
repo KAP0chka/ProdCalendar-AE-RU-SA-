@@ -16,14 +16,14 @@
             --color-ru: #0039a6; 
             --color-ae: #ce1126; 
             --color-sa: #006c35; 
-            --color-kz: #00afca; /* Kazakhstan Sky Blue */
+            --color-kz: #00afca; 
             
             /* Vibrant non-working day accent color */
             --color-accent: #FF2F92;
 
             /* Dynamic weekend background shades */
-            --bg-holiday-full: #ffc2dc;    /* Day off for ALL active countries */
-            --bg-holiday-partial: #ffe3ef; /* Day off for SOME active countries */
+            --bg-holiday-full: #ffc2dc;    
+            --bg-holiday-partial: #ffe3ef; 
         }
 
         body {
@@ -35,7 +35,7 @@
         }
 
         .container {
-            max-width: 1650px;
+            max-width: 1600px;
             margin: 0 auto;
         }
 
@@ -250,7 +250,7 @@
             grid-column: span 2;
         }
 
-        /* 4 active countries (Maximum alignment, e.g. Saturday): 2x2 Clean Grid */
+        /* 4 active countries: 2x2 Clean Grid */
         .badges-4 .day-badges {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -318,6 +318,7 @@
         <p style="color: var(--text-muted); font-size: 1.2rem;">Work Schedule Synchronization: Russia (RU), UAE (AE), Saudi Arabia (SA), Kazakhstan (KZ)</p>
     </header>
 
+    <!-- Checkbox Filters -->
     <div class="filter-panel">
         <div class="filter-title">⚙️ Display holidays and weekends for:</div>
         <div class="checkbox-group">
@@ -339,19 +340,25 @@
             </label>
         </div>
 
+        <!-- Weekend Disclaimer -->
         <div class="disclaimer-box">
             📌 <b>Regional Weekend Characteristics:</b> <br>
             • <b>Saturday</b> — the only guaranteed <b>common day off</b> for all four countries (RU, AE, SA, KZ). <br>
             • <b>Friday</b> — an official day off <b>only in Saudi Arabia (SA)</b>. In Russia and Kazakhstan it is a standard working day, and in the UAE (AE) it is a shortened working day (until noon). <br>
-            • <b>Sunday</b> — an official day off in <b>Russia (RU), UAE (AE), and Kazakhstan (KZ)</b>. In Saudi Arabia, it is a standard working day.
+            • <b>Sunday</b> — an official day off in <b>Russia (RU), UAE (AE), and Kazakhstan (KZ)</b>. In Saudi Arabia, it is a standard working day. <br>
+            • ⚠️ <b>Islamic holidays</b> (Eid al-Fitr, Arafat, Eid al-Adha, Islamic New Year, Prophet's Birthday) are <b>moon-sighting estimates</b> and may shift by ±1 day after official confirmation. KSA/UAE Eid dates may differ by a day.
         </div>
     </div>
 
+    <!-- Calendar Months Container -->
     <div class="months-grid" id="calendarGrid"></div>
 </div>
 
 <script>
-    // 2026 Official Holiday Registry (Including Transfers)
+    // 2026 Holiday Registry. Gregorian/national dates verified against official
+    // production calendars (RU: Gov't Decree; KZ: egov.kz) and official UAE/KSA sources.
+    // Islamic holidays (Eid, Arafat, Mawlid, Islamic New Year) are moon-sighting
+    // ESTIMATES and may shift by 1 day after official confirmation. Last review: 2026-06.
     const holidayData = {
         "01-01": { RU: "New Year's Day", AE: "New Year's Day", KZ: "New Year's Day" },
         "01-02": { RU: "New Year Holidays", KZ: "New Year Holiday" },
@@ -361,15 +368,16 @@
         "01-06": { RU: "New Year Holidays" },
         "01-07": { RU: "Orthodox Christmas", KZ: "Orthodox Christmas" },
         "01-08": { RU: "New Year Holidays" },
+        "01-09": { RU: "New Year Holidays (Day Off Transfer from Jan 3)" },
         "02-22": { SA: "Founding Day" },
         "02-23": { RU: "Defender of the Fatherland Day" },
         "03-08": { RU: "International Women's Day", KZ: "International Women's Day" },
         "03-09": { RU: "Day Off Transfer", KZ: "Day Off Transfer (Women's Day)" },
-        "03-19": { AE: "Eid al-Fitr Holiday", SA: "Eid al-Fitr" },
-        "03-20": { AE: "Eid al-Fitr Holiday", SA: "Eid al-Fitr" },
-        "03-21": { AE: "Eid al-Fitr", SA: "Eid al-Fitr", KZ: "Nauryz Meiramy" },
-        "03-22": { AE: "Eid al-Fitr", SA: "Eid al-Fitr", KZ: "Nauryz Meiramy" },
-        "03-23": { KZ: "Nauryz Meiramy" },
+        "03-19": { AE: "Eid al-Fitr Holiday" }, // UAE adds last day of Ramadan
+        "03-20": { AE: "Eid al-Fitr", SA: "Eid al-Fitr" },          // KSA 1 Shawwal
+        "03-21": { AE: "Eid al-Fitr Holiday", SA: "Eid al-Fitr", KZ: "Nauryz Meiramy" },
+        "03-22": { AE: "Eid al-Fitr Holiday", SA: "Eid al-Fitr", KZ: "Nauryz Meiramy" },
+        "03-23": { SA: "Eid al-Fitr", KZ: "Nauryz Meiramy" },
         "03-24": { KZ: "Day Off Transfer (Nauryz)" },
         "03-25": { KZ: "Day Off Transfer (Nauryz)" },
         "05-01": { RU: "Spring and Labor Day", KZ: "People's Unity Day" },
@@ -379,21 +387,23 @@
         "05-26": { AE: "Arafat Day", SA: "Arafat Day" },
         "05-27": { AE: "Eid al-Adha Holiday", SA: "Eid al-Adha", KZ: "Kurban Ait" },
         "05-28": { AE: "Eid al-Adha", SA: "Eid al-Adha" },
-        "05-29": { AE: "Eid al-Adha", SA: "Eid al-Adha" },
+        "05-29": { AE: "Eid al-Adha Holiday", SA: "Eid al-Adha" },
+        "05-30": { SA: "Eid al-Adha" }, // KSA public sector often extends to Day 4
         "06-12": { RU: "Russia Day" },
-        "06-16": { AE: "Islamic New Year" }, 
+        "06-15": { AE: "Islamic New Year" }, // Fixed UAE Jun 15
         "07-06": { KZ: "Capital City Day" },
-        "08-25": { AE: "Prophet's Birthday" }, 
+        "08-25": { AE: "Prophet's Birthday" }, // 12 Rabi al-Awwal 1448 (Tue)
         "08-30": { KZ: "Constitution Day" },
         "08-31": { KZ: "Day Off Transfer (Constitution Day)" },
         "09-23": { SA: "National Day" },
         "10-25": { KZ: "Republic Day" },
         "10-26": { KZ: "Day Off Transfer (Republic Day)" },
         "11-04": { RU: "Unity Day" },
-        "12-01": { AE: "Commemoration Day" },
+        "11-30": { AE: "Commemoration Day" }, // Fixed UAE Nov 30
         "12-02": { AE: "UAE National Day" },
         "12-03": { AE: "UAE National Day" },
-        "12-16": { KZ: "Independence Day" }
+        "12-16": { KZ: "Independence Day" },
+        "12-31": { RU: "New Year Holiday (Day Off Transfer from Jan 4)" }
     };
 
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -491,7 +501,6 @@
                 if (dayOfWeekIndex === 5) weekendClass = 'we-saturday';  
                 if (dayOfWeekIndex === 6) weekendClass = 'we-sunday';
 
-                // Standard weekend fallbacks for tooltips
                 if (dayOfWeekIndex === 4 && checkedCountries.includes('SA') && (!holidayData[dateKey] || !holidayData[dateKey].SA)) {
                     if (!tooltipParts.some(p => p.startsWith('SA:'))) tooltipParts.push("SA: Calendar Weekend");
                 }
